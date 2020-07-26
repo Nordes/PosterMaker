@@ -5,9 +5,9 @@
     <ItemGroup>
         <None Include="styles\main.scss" />
         <None Include="index.html" />
+        <Compile Include=".\Components\ContentView.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Server.fs" />
-        <Compile Include="components/ContentRawView.fs" />
         <Compile Include="App.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>

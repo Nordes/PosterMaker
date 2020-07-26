@@ -4,27 +4,18 @@ open Feliz
 open Elmish
 open Shared
 open Fulma
+open Fable.React.Helpers
 
-type Shortcut = {
-        Title: string
-        Keys: seq<string>
-    }
-
-type Section = {
-        Name: string
-    }
 
 type State = { 
     Counter: Deferred<Result<Counter, string>> 
-    Sections: List<Section>
+    Poster: Poster
     }
 
 type Msg =
-    | CreateSection of string
-    | CreateShortut of seq<string>
     | LoadCounter of AsyncOperationStatus<Result<Counter, string>>
 
-let init() = { Counter = HasNotStartedYet; Sections = [] }, Cmd.ofMsg (LoadCounter Started)
+let init() = { Counter = HasNotStartedYet; Poster = Poster.FakeData }, Cmd.ofMsg (LoadCounter Started)
 
 let update (msg: Msg) (state: State) =
     match msg with
@@ -41,7 +32,7 @@ let update (msg: Msg) (state: State) =
         { state with Counter = InProgress }, Cmd.fromAsync loadCounter
 
     | LoadCounter (Finished counter) ->
-        { state with Counter = Resolved counter }, Cmd.none
+      { state with Counter = Resolved counter }, Cmd.none
 
     // | Increment ->
     //     let updatedCounter =
@@ -83,42 +74,6 @@ let showContent (dispatch: Msg -> unit) =
         ]
     ]
 
-let nav () =
-    Html.nav [
-      prop.className ["navbar"; "is-fulma"]
-      prop.children [
-        Html.div [
-          prop.className "container"
-          prop.children [
-            Html.div [
-              prop.className "navbar-start"
-              prop.children [
-                Html.div [
-                  prop.className "navbar-start"
-                  prop.children [
-                    Html.div [
-                      prop.className "navbar-brand"
-                      prop.children [
-                        Html.h1 [
-                          prop.className ["title"; "is-1"]
-                          prop.children [
-                            Html.img [
-                              prop.alt "logo"
-                              prop.className ""
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-    ]
-
 let render (state: State) (dispatch: Msg -> unit) =
   Html.div [
     Navbar.navbar [ Navbar.Color IsPrimary] [
@@ -136,11 +91,11 @@ let render (state: State) (dispatch: Msg -> unit) =
         ] 
       ]
 
-    Html.section [
-      prop.className ["section"]
-      prop.children [
-          // drawCalendar model dispatch
-      ] ]
+    Section.section [ ]
+      [ Container.container [ Container.IsFluid ]
+          [ 
+            App.Components.contentRawView()
+          ] ]
 
     Footer.footer [ ]
       [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
@@ -149,4 +104,3 @@ let render (state: State) (dispatch: Msg -> unit) =
             Html.p  "A way to create your poster for shortcuts... somehow!" ] ]
 
    ]
-   
