@@ -78,7 +78,7 @@ let contentRawView = React.functionComponent("posterRawContent", fun () ->
   let handleAddShortcut posterId sectionId =
     let sec = poster.Sections |> List.map (fun s -> 
                                             if s.Id <> sectionId then s
-                                            else { s with Shortcuts = s.Shortcuts @ [ Shared.Shortcut.Default] }
+                                            else { s with Shortcuts = s.Shortcuts @ [{Shared.Shortcut.Default with Id = s.GetNextShortcutId()}] }
                                            )
     // TODO : Send update to server
     setPoster ({ poster with Sections = sec })
@@ -100,12 +100,17 @@ let contentRawView = React.functionComponent("posterRawContent", fun () ->
               Card.header [ ] [ 
                 Card.Header.title [ ] [ 
                   editableSpan ({Value = section.Title; HandleSave = (fun e -> handleEditSection poster.Id section.Id e )})
+                  Html.span (sprintf " - %i" section.Id)
                 ]
               ]
               Card.content [ ] [
                 Html.ul [
                   for shortcut in section.Shortcuts do
-                    Html.li [editableSpan ({Value = shortcut.Title; HandleSave = fun (e) -> handleEditShortcut poster.Id section.Id shortcut.Id e })]
+                    Html.li [
+                      editableSpan ({Value = shortcut.Title; HandleSave = fun (e) -> handleEditShortcut poster.Id section.Id shortcut.Id e })
+                      Html.span (sprintf " - %i" shortcut.Id)
+                    ]
+                    
                   Html.li [ 
                     Button.button [ 
                       Button.OnClick <| fun e -> handleAddShortcut poster.Id section.Id // printf "Poster: %i; Section: %i; New shortcut" poster.Id section.Id;

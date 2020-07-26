@@ -26,7 +26,13 @@ type Section = {
       Title = "Click me to edit"
       Shortcuts = []
     }
-    
+    // Could eventually become a guid instead of an int.
+    member this.GetNextShortcutId () = 
+      if this.Shortcuts.Length = 0 then 1 
+      else 
+        let maxId = this.Shortcuts |> List.maxBy (fun f -> f.Id)
+        maxId.Id + 1
+
 type Poster = {
     Id: System.Guid // Should probably be a guid... for the other sub items, we should be kind of fine.
     Title: string
@@ -59,8 +65,10 @@ type Poster = {
 
     // Could eventually become a guid instead of an int.
     member this.GetNextSectionId () = 
-      let maxId = this.Sections |> List.maxBy (fun f -> f.Id)
-      maxId.Id + 1
+      if this.Sections.Length = 0 then 1 
+      else 
+        let maxId = this.Sections |> List.maxBy (fun f -> f.Id)
+        maxId.Id + 1
 
 type Counter = { value : int }
 
