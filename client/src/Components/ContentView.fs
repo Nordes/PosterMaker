@@ -65,24 +65,23 @@ let contentRawView = React.functionComponent("posterRawContent", fun () ->
   React.useEffect(loadData >> Async.StartImmediate, [| |])
   
   let handleEditSection posterId sectionId e = 
-    printf  "Poster Id: %i; Section Id: %i; data %s" posterId sectionId e
+    printf  "Poster Id: %A; Section Id: %i; data %s" posterId sectionId e
   let handleEditShortcut posterId sectionId shortcutId e = 
-    printf "Poster Id: %i; Section Id: %i; Shortcut Id: %i; data %s" posterId sectionId shortcutId e
+    printf "Poster Id: %A; Section Id: %i; Shortcut Id: %i; data %s" posterId sectionId shortcutId e
 
   let handleAddSection posterId = 
-    printf  "Poster Id: %i; " posterId
+    printf  "Poster Id: %A; " posterId
     // Find max section ID + 1... kind of... normally should be a service call
     // if not a "live" save, then we could handle the tree differently.
-    setPoster ({poster with Sections = poster.Sections @ [Shared.Section.Default] })
+    setPoster ({poster with Sections = poster.Sections @ [{Shared.Section.Default with Id = poster.GetNextSectionId() }] })
 
   let handleAddShortcut posterId sectionId =
     let sec = poster.Sections |> List.map (fun s -> 
                                             if s.Id <> sectionId then s
                                             else { s with Shortcuts = s.Shortcuts @ [ Shared.Shortcut.Default] }
                                            )
+    // TODO : Send update to server
     setPoster ({ poster with Sections = sec })
-    printf "Poster: %i; Section: %i; New shortcut %A" posterId sectionId sec
-
 
   Html.div [
     if isLoading

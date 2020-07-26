@@ -28,7 +28,7 @@ type Section = {
     }
     
 type Poster = {
-    Id: int
+    Id: System.Guid // Should probably be a guid... for the other sub items, we should be kind of fine.
     Title: string
     Sections: List<Section>
     Background: Option<string>
@@ -37,7 +37,7 @@ type Poster = {
   }
   with
     static member Default = {
-      Id = 0
+      Id = System.Guid.NewGuid()
       Title = ""
       Sections = []
       Background = None
@@ -45,7 +45,7 @@ type Poster = {
       Font = None
     }
     static member FakeData = {
-      Id = 1
+      Id = System.Guid.NewGuid()
       Title = "My poster title ;)"
       Sections = [
         {Id = 1; Title="My first section"; Shortcuts = [{Id = 1; Title="Open"; Description = None; Keys=[]}]}
@@ -57,6 +57,10 @@ type Poster = {
       Font = None
     }
 
+    // Could eventually become a guid instead of an int.
+    member this.GetNextSectionId () = 
+      let maxId = this.Sections |> List.maxBy (fun f -> f.Id)
+      maxId.Id + 1
 
 type Counter = { value : int }
 
