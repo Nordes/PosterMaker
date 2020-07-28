@@ -12,7 +12,7 @@ You require to have dotnet framework + F#... and probably a `dotnet restore` (ba
 No demo... not yet... it's almost working.
 
 ## Preview
-![PosterMaker](https://raw.githubusercontent.com/Nordes/PosterMaker/master/tash-assets/ux-kindof.png)
+![PosterMaker](https://github.com/Nordes/PosterMaker/raw/master/trash-assets/ux-kindof.png)
 
 # License
 Not yet decided...
