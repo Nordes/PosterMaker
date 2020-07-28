@@ -54,9 +54,9 @@ type Poster = {
       Id = System.Guid.NewGuid()
       Title = "My poster title ;)"
       Sections = [
-        {Id = 1; Title="My first section"; Shortcuts = [{Id = 1; Title="Open"; Description = None; Keys=[]}]}
-        {Id = 2; Title="My second section"; Shortcuts = [{Id = 2; Title="Archive"; Description = None; Keys=[]}; {Id = 3; Title="Delete"; Description = None; Keys=[]}]}
-        {Id = 3; Title="Empty third section"; Shortcuts = []}
+        { Id = 1; Title="My first section"; Shortcuts = [{Id = 1; Title="Open"; Description = None; Keys=["Ctrl"; "Alt"; "Shift"; "O"]}] }
+        { Id = 2; Title="My second section"; Shortcuts = [{Id = 2; Title="Archive"; Description = None; Keys=["Y"]}; { Id = 3; Title="Delete"; Description = None; Keys=["D"] }] }
+        { Id = 3; Title="Empty third section"; Shortcuts = [] }
         ]
       Background = None
       Color = None

@@ -8,14 +8,16 @@ open Fable.React.Helpers
 
 
 type State = { 
-    Counter: Deferred<Result<Counter, string>> 
-    Poster: Poster
-    }
+  Counter: Deferred<Result<Counter, string>> 
+  Poster: Poster
+  ShortcutDialog: option<App.Components.ModalShortcut.DialogProps>
+  }
 
 type Msg =
-    | LoadCounter of AsyncOperationStatus<Result<Counter, string>>
+  | LoadCounter of AsyncOperationStatus<Result<Counter, string>>
+  | EditShortcutDialog of option<App.Components.ModalShortcut.DialogProps>
 
-let init() = { Counter = HasNotStartedYet; Poster = Poster.FakeData }, Cmd.ofMsg (LoadCounter Started)
+let init() = { Counter = HasNotStartedYet; Poster = Poster.FakeData; ShortcutDialog = None }, Cmd.ofMsg (LoadCounter Started)
 
 let update (msg: Msg) (state: State) =
     match msg with
@@ -33,6 +35,11 @@ let update (msg: Msg) (state: State) =
 
     | LoadCounter (Finished counter) ->
       { state with Counter = Resolved counter }, Cmd.none
+
+    | EditShortcutDialog myDialogProps ->
+      let newState = { state with ShortcutDialog = myDialogProps }
+      printfn "Edit mapping visibility should be: %A" <| match newState.ShortcutDialog with | Some -> true | None -> false
+      newState, Cmd.none
 
     // | Increment ->
     //     let updatedCounter =
@@ -94,13 +101,17 @@ let render (state: State) (dispatch: Msg -> unit) =
     Section.section [ ]
       [ Container.container [ Container.IsFluid ]
           [ 
-            App.Components.contentRawView()
+            App.Components.contentRawView ({ ToggleModal = fun (content) -> dispatch (EditShortcutDialog content) })
           ] ]
 
     Footer.footer [ ]
       [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
           [ 
             Html.h1  "Poster Maker"
-            Html.p  "A way to create your poster for shortcuts... somehow!" ] ]
+            Html.p  "A way to create your poster for shortcuts... somehow!"  ] ]
 
+    
+    match state.ShortcutDialog with
+    | Some e -> App.Components.ModalShortcut.recorder e
+    | None   -> Html.none
    ]

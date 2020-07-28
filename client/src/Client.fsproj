@@ -5,6 +5,7 @@
     <ItemGroup>
         <None Include="styles\main.scss" />
         <None Include="index.html" />
+        <Compile Include=".\Components\ModalShortcut.fs" />
         <Compile Include=".\Components\ContentView.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Server.fs" />
