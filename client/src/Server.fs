@@ -28,11 +28,22 @@ let combine (paths: string list) =
 /// Normalized the path taking into account the virtual path of the server
 let normalize (path: string) = combine [ virtualPath; path ]
 
+// This skip the type and use the method name only
 let normalizeRoutes typeName methodName =
     Shared.routerPaths typeName methodName
+    |> normalize
+
+// This use the type and the method name as part of the api path.
+let normalizeRoutes2 typeName methodName =
+    Shared.routerPaths2 typeName methodName
     |> normalize
 
 let api =
     Remoting.createApi()
     |> Remoting.withRouteBuilder normalizeRoutes
     |> Remoting.buildProxy<Shared.IServerApi>
+
+let posterApi = 
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder normalizeRoutes2
+    |> Remoting.buildProxy<Shared.IPosterApi>

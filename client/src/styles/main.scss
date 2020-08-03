@@ -4,9 +4,22 @@ $primary-invert: #fff;
 @import "../../node_modules/bulma/bulma.sass";
 
 @import url('https://fonts.googleapis.com/css?family=Spartan&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap'); // font-family: 'Overpass Mono', monospace;
 
 * {
     font-family: 'Spartan', sans-serif;
+}
+
+.tag {
+   font-family: 'Overpass Mono', monospace;
+}
+
+.tagPlus {
+   font-family: 'Overpass Mono', monospace;
+   line-height: 1.5;
+   height: 2em;
+   font-size: 0.75rem;
+   white-space: nowrap;
 }
 
 .pointer {

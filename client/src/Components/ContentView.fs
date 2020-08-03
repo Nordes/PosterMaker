@@ -42,6 +42,9 @@ let editableSpan = React.functionComponent( fun (props: EditableSpan) ->
   else 
     Html.input [
       prop.autoFocus true
+      prop.onFocus (fun e -> 
+                        let target = e.target :?> Browser.Types.HTMLInputElement
+                        target.select() )
       prop.placeholder "Section"
       prop.className ["input"; "is-small"]
       prop.type' "text"
@@ -77,9 +80,9 @@ let renderShortcut = React.functionComponent( fun (props: RenderShortcut)  ->
       Level.item [ ] [
         let getTagColor key = 
           match key with
-          | "Ctrl" | "Alt" | "Fn" | "Shift" | "Esc" -> IsDark
-          | "F1" | "F2" | "F3" | "F4" | "F5" | "F6" | "F7" | "F8" | "F9" | "F10" | "F11" | "F12" -> IsInfo
-          | _ -> IsLight
+          | "Ctrl" | "Alt" | "Fn" | "Shift" | "Esc" | "Tab" | "CapsLock" | "Backspace" | "Space" | "Enter" | "Meta" -> IsDark
+          | "F1" | "F2" | "F3" | "F4" | "F5" | "F6" | "F7" | "F8" | "F9" | "F10" | "F11" | "F12" -> IsLink
+          | _ -> IsLink
         Html.div [
           prop.onClick (fun _ -> props.HandleEditMapping())
           prop.className ["pointer"]
@@ -92,9 +95,9 @@ let renderShortcut = React.functionComponent( fun (props: RenderShortcut)  ->
               for part in stuff do
                 Tag.tag [ Tag.Color <| getTagColor part ] [ str part ] 
                 // If last, avoid +
-                Html.span "+"
+                Html.span [ prop.text "+"; prop.className [StyleLiterals.TagPlus]]
               
-              Tag.tag [ Tag.Color <| getTagColor stuff2 ] [ str stuff2 ]
+              Tag.tag [ Tag.Color <| getTagColor stuff2] [ str stuff2 ]
             else
               Tag.tag [ Tag.Color IsWarning] [ str "...set shortcut..." ]
           ]
@@ -105,28 +108,29 @@ let renderShortcut = React.functionComponent( fun (props: RenderShortcut)  ->
 )
 
 type ContentRawView = {
+  Poster: Poster
   ToggleModal: Option<Components.ModalShortcut.DialogProps> -> Unit
   // CloseShortcut: Unit
 }
 
 let contentRawView = React.functionComponent("posterRawContent", fun (props:ContentRawView) ->
   let (isLoading, setLoading) = React.useState(false)
-  let (poster, setPoster) = React.useState(Poster.Default)
+  let (poster, setPoster) = React.useState(props.Poster)//Poster.Default)
   
-  let loadData() = async {
-      setLoading true
-      do! Async.Sleep 500 // fake download... heh
-      setLoading false
-      printf "Content loaded \o/"
-      setPoster Poster.FakeData
-  }
+  // let loadData() = async {
+  //     setLoading true
+  //     do! Async.Sleep 500 // fake download... heh
+  //     setLoading false
+  //     printf "Content loaded \o/"
+  //     setPoster Poster.FakeData
+  // }
 
-  React.useEffect(loadData >> Async.StartImmediate, [| |])
+  // React.useEffect(loadData >> Async.StartImmediate, [| |])
   
   let handleEditSection posterId sectionId e = 
     printf  "handleEditSection ||> Poster Id: %A; Section Id: %i; data %s" posterId sectionId e
   let handleEditScText posterId sectionId shortcutId newTitle = 
-    // text
+    // If empty, we should delete it
     let sec = poster.Sections |> List.map (fun s -> 
                                             if s.Id <> sectionId then s
                                             else 
@@ -176,7 +180,7 @@ let contentRawView = React.functionComponent("posterRawContent", fun (props:Cont
       // _generateAsMenu ()
       Columns.columns [ Columns.IsMultiline; Columns.IsMobile ] [
         for section in poster.Sections do
-          Column.column [ Column.Width(Screen.All, Column.IsOneQuarter); ] [
+          Column.column [ Column.Width(Screen.All, Column.IsOneThird); ] [
             Card.card [ ] [ 
               Card.header [ ] [ 
                 Card.Header.title [ ] [ 

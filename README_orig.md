@@ -116,3 +116,12 @@ Then run the build target `InstallAnalyzers` again where it will delete the cont
 ### IIS Support
 
 The bundled application you get by running the `Pack` build target can be used directly as an application inside of IIS. Publishing on IIS requires that you make a separate Application Pool per .NET Core application with selected .NET CLR Version = `No Managed Code`. Then creating a new IIS Application which into the newly created Application Pool and setting the Physical Path of that Application to be the `dist` directory.
+
+
+#### Sample to look at 
+* https://github.com/Dzoukr/Yobo
+
+Api calls if not using the remoting
+* https://thoth-org.github.io/Thoth.Fetch/#Type-via-the-promise-result
+or
+* https://github.com/Zaid-Ajaj/Fable.SimpleHttp 

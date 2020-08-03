@@ -33,6 +33,7 @@ let recorder = React.functionComponent("modalShortcutRecorder", fun (props: Dial
     let key = match k with 
                | "Control" -> "Ctrl" 
                | "Escape" -> "Esc"
+               | " " -> "Space"
                | a when a >= "a" && a <= "z" -> a.ToUpper()
                | _ -> k
 
@@ -48,6 +49,7 @@ let recorder = React.functionComponent("modalShortcutRecorder", fun (props: Dial
     let key = match k with 
                | "Control" -> "Ctrl" 
                | "Escape" -> "Esc"
+               | " " -> "Space"
                | a when a >= "a" && a <= "z" -> a.ToUpper()
                | _ -> k
 
@@ -67,7 +69,7 @@ let recorder = React.functionComponent("modalShortcutRecorder", fun (props: Dial
           let getTagColor key = 
             match key with
             | "Ctrl" | "Alt" | "Fn" | "Shift" -> IsDark
-            | _ -> IsLight
+            | _ -> IsInfo
           Html.div [ 
             if props.Data.Length > 0 then
               let stuff  = props.Data |> List.rev |> List.tail |> List.rev
@@ -75,7 +77,7 @@ let recorder = React.functionComponent("modalShortcutRecorder", fun (props: Dial
               
               for part in stuff do
                 Tag.tag [ Tag.Color <| getTagColor part ] [ str part ] 
-                Html.span "+"
+                Html.span [ prop.text "+"; prop.className [StyleLiterals.TagPlus]]
               
               Tag.tag [ Tag.Color <| getTagColor stuff2 ] [ str stuff2 ]
             else
@@ -98,6 +100,7 @@ let recorder = React.functionComponent("modalShortcutRecorder", fun (props: Dial
                 prop.type' "text"
                 prop.className ["input"]
                 prop.value (d.Substring(0, (d.Length-1)))
+                prop.autoFocus true
                 prop.readOnly true
                 prop.placeholder "Push the keys"
                 prop.onKeyDown (fun e -> e.preventDefault(); addKey e.key)

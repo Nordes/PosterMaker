@@ -1,7 +1,9 @@
 ﻿module Shared
+open System
 
 /// Defines how routes are generated on server and mapped from client
 let routerPaths typeName method = sprintf "/api/%s" method
+let routerPaths2 typeName method = sprintf "/api/%s/%s" typeName method
 
 type Shortcut = {
     Id: int
@@ -76,4 +78,20 @@ type Counter = { value : int }
 /// to learn more, read the docs at https://zaid-ajaj.github.io/Fable.Remoting/src/basics.html
 type IServerApi = {
     Counter : unit -> Async<Counter>
+}
+
+type NewPosterReq = {
+  Title: string
+}
+
+type PosterGetAllRes = {
+  Title: string
+  Id: Guid
+}
+
+type IPosterApi = {
+  GetAll: unit -> Async<list<PosterGetAllRes>>
+  Get: Guid -> Async<Poster>
+  Save: Poster -> Async<Poster>
+  Create: NewPosterReq -> Async<Poster>
 }
